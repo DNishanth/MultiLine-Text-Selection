@@ -1,6 +1,16 @@
 // stores all currently highlighted nodes
 var highlights = new Array();
 
+// sends array of selected text to the background page
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+  	var selectedText = new Array();
+  	for (var i = 0; i < highlights.length; i++) {
+  		selectedText.push(highlights[i].textContent);
+  	}
+  	sendResponse({array: selectedText});
+  });
+
 // highlights selected text when mouseup and ctrl down
 document.addEventListener("mouseup", function(e) {
 	if (e.ctrlKey) {
@@ -8,9 +18,9 @@ document.addEventListener("mouseup", function(e) {
 	}
 });
 
-// clears all selected text when mousedown and ctrl up
+// clears all selected text when left mousedown and ctrl up
 document.addEventListener("mousedown", function(e) {
-	if (!e.ctrlKey) {
+	if (!e.ctrlKey && (e.button == 0)) {
 		removeHighlights();
 	}
 });
