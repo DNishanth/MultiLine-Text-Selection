@@ -1,8 +1,8 @@
 {
 	"manifest_version": 3,
-	"name": "MultiTabSearch",
+	"name": "Non-Adjacent Text Selection",
 	"version": "1",
-	"description": "Opens multiple search tabs for each line of selected text",
+	"description": "Allows copying and searching of non-adjacent text selections.",
 	"background": {
     	"scripts": ["background.js"],
     	"persistent": false
@@ -18,5 +18,5 @@
           "default_title": "Copy Options",
           "default_popup": "options.html"
   },
-  "permissions": ["contextMenus", "activeTab", "tabs", "clipboardWrite", "storage"]
+  "permissions": ["contextMenus", "tabs", "clipboardWrite", "storage"]
 }
