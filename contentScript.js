@@ -1,6 +1,9 @@
 // stores all currently highlighted nodes
 var highlights = new Array();
 
+// copy by newline if true, by spaces otherwise
+var copyByNewLine = true;
+
 // sends array of selected text to the background page
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -36,11 +39,20 @@ document.addEventListener('copy', function(e) {
 
 // selected text is concatenated, separated by newlines
 function getSelectedText() {
+	// retrieves current copy option
+	chrome.storage.sync.get({copyByNewLine: true}, function(result) {
+		copyByNewLine = result.copyByNewLine;
+	});
 	var text = "";
  	for (var i = 0; i < highlights.length; i++) {
  		text += highlights[i].textContent;
  		if (i != highlights.length - 1) {
- 			text += "\n";
+ 			if (copyByNewLine) {
+ 				text += "\n";
+ 			}
+ 			else {
+ 				text += " ";
+ 			}
  		}
 	}
 	return text;
