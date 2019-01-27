@@ -32,17 +32,18 @@ document.addEventListener("mousedown", function(e) {
 // the clipboard
 document.addEventListener('copy', function(e) {
 	if (highlights.length != 0) {
-		e.clipboardData.setData('text/plain', getSelectedText());
-		e.preventDefault(); // prevents default copy event
+	e.clipboardData.setData('text/plain', getSelectedText());
+	e.preventDefault(); // prevents default copy event
 	}
+});
+
+// updates copy option
+chrome.storage.onChanged.addListener(function(changes, areaName) {
+	copyByNewLine = changes.copyByNewLine.newValue;
 });
 
 // selected text is concatenated, separated by newlines
 function getSelectedText() {
-	// retrieves current copy option
-	chrome.storage.sync.get({copyByNewLine: true}, function(result) {
-		copyByNewLine = result.copyByNewLine;
-	});
 	var text = "";
  	for (var i = 0; i < highlights.length; i++) {
  		text += highlights[i].textContent;
@@ -68,11 +69,14 @@ function highlightText() {
 	highlightNode.style.color = "white";
 	highlightNode.style.backgroundColor = 'rgb(' + 51 + ',' + 144 + ',' + 255 + ')';
 	
-	// stores highlight node so it can be deleted later
-	highlights.push(highlightNode);
-		
 	// surround the text with the highlighting node
 	selectionRange.surroundContents(highlightNode);
+
+	// stores highlight node so it can be deleted later
+	// checks for empty selection from ctrl clicking on blank space
+	if (highlightNode.textContent != "") {
+		highlights.push(highlightNode);
+	}
 }
 
 // clears all selected text
