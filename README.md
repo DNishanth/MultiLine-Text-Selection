@@ -10,7 +10,7 @@ Enable Developer Mode at chrome://extensions. Select 'Load unpacked' and choose 
 You can also install the extension directly from the Chrome Web Store at: 
 
 ### Usage
-Make each selection while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo the most recent selection by pressing ctrl-z.
+Make each selection while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo with ctrl-z.
 
 Right click the final selection (dark blue) for search options.
 Select MultiSearch to open a search tab for each selection.
