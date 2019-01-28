@@ -32,8 +32,16 @@ document.addEventListener("mousedown", function(e) {
 // the clipboard
 document.addEventListener('copy', function(e) {
 	if (highlights.length != 0) {
-	e.clipboardData.setData('text/plain', getSelectedText());
-	e.preventDefault(); // prevents default copy event
+		e.clipboardData.setData('text/plain', getSelectedText());
+		e.preventDefault(); // prevents default copy event
+	}
+});
+
+// removes the most recent selection when ctrl + z is pressed
+document.addEventListener('keydown', function(e) {
+	if (highlights.length != 0 && e.ctrlKey && e.key == "z") {
+		removeHighlight(highlights.length - 1);
+		highlights.splice(highlights.length - 1, 1);
 	}
 });
 
@@ -79,15 +87,20 @@ function highlightText() {
 	}
 }
 
+// clears single selection
+function removeHighlight(x) {	
+	var replacedNode = highlights[x];
+	// replaces highlighted text with original text
+	var text = document.createTextNode(replacedNode.textContent);
+	replacedNode.parentNode.replaceChild(text, replacedNode);
+}
+
 // clears all selected text
 function removeHighlights() {
 	// called on each stored highlight
 	for (var i = 0; i < highlights.length; i++) {
-		var replacedNode = highlights[i];
-		// replaces highlighted text with original text
-		var text = document.createTextNode(replacedNode.textContent);
-		replacedNode.parentNode.replaceChild(text, replacedNode);
+		removeHighlight(i);
 	}
-	// clears highlight
+	// clears highlights
 	highlights = new Array();
 }
