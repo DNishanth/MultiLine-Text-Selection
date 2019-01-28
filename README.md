@@ -10,7 +10,7 @@ Enable Developer Mode at chrome://extensions. Select 'Load unpacked' and choose 
 You can also install the extension directly from the Chrome Web Store at: 
 
 ### Usage
-Make each selection while holding down ctrl. Clear all selections by clicking without holding ctrl.
+Make each selection while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo the most recent selection by pressing ctrl-z.
 
 Right click the final selection (dark blue) for search options.
 Select MultiSearch to open a search tab for each selection.
@@ -24,7 +24,10 @@ If 'Copy With Spaces' is selected, each selection will be separated by spaces wh
 - Selections are sent to the clipboard and searched in the order they are selected
 - Newlines when selecting multiple bullets or lines of text will be automatically removed.
 - This extension is intended to be used on text. Selections on non-text areas such as hyperlinks will fail.
-- There is a bug where selections are sometimes not cleared when clicking. Refresh the page if this happens.
+
+### Known Bugs
+- Selections are rarely not cleared after clicking. Refresh the page if this happens.
+- When undoing multiple selections on the same line or paragraph, if something after the last selection(in position) in the same line or paragrah is ctrl-clicked, random words will be highlighted with each undo. It is not clear why this happens.
 
 ## License
 This project is licensed under GNU GPLv3.
