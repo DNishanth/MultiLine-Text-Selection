@@ -26,10 +26,11 @@ If 'Copy With Spaces' is selected, each selection will be separated by spaces wh
 - This extension is intended to be used on text. Selections on non-text areas such as hyperlinks will fail.
 
 ### Known Bugs
-- Selections are rarely not cleared after clicking. Refresh the page if this happens.
+- Toggling copy options will sometimes not take effect. Toggling again will fix this.
 - When undoing multiple selections on the same line or paragraph, if something after the last selection(in position) in the same line or paragrah is ctrl-clicked, random words will be highlighted with each undo. It is not clear why this happens.
 - When making overlapping selections, ctrl-z will remove the combined selection. The clipboard will only remove the most recent selection. This is due to how the removeHighlight() function works.
 - Selecting text will rarely remove spaces between words.
+- Selections are rarely not cleared after clicking. Refresh the page if this happens.
 
 ## License
 This project is licensed under GNU GPLv3.
