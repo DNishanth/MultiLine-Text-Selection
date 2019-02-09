@@ -1,5 +1,5 @@
 # Non-Adjacent Text Selection
-Allows non-adjacent text selections in Chrome. Text can be copied to clipboard through the right-click copy option or ctrl-c.
+Allows non-adjacent text selections in Chrome. Text can be copied to clipboard through ctrl-c or the right-click copy option.
 You can also Google search the text through the right click selection menu.
 
 ## Getting Started
@@ -21,14 +21,13 @@ If 'Copy With Newline' is selected, each selection will be separated by a newlin
 If 'Copy With Spaces' is selected, each selection will be separated by spaces when copying.
 
 ### Notes
+- When making overlapping selections, ctrl-z will remove the combined selection.
 - Selections are sent to the clipboard and searched in the order they are selected
 - Newlines when selecting multiple bullets or lines of text will be automatically removed.
 - This extension is intended to be used on text. Selections on non-text areas such as hyperlinks will fail.
 
-### Known Bugs
+### Issues
 - Toggling copy options will sometimes not take effect. Toggling again will fix this.
-- When undoing multiple selections on the same line or paragraph, if something after the last selection(in position) in the same line or paragrah is ctrl-clicked, random words will be highlighted with each undo. It is not clear why this happens.
-- When making overlapping selections, ctrl-z will remove the combined selection. The clipboard will only remove the most recent selection. This is due to how the removeHighlight() function works.
 - Selecting text will rarely remove spaces between words.
 - Selections are rarely not cleared after clicking. Refresh the page if this happens.
 
