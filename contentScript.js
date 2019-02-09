@@ -9,7 +9,9 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
   	var selectedText = new Array();
   	for (var i = 0; i < highlights.length; i++) {
-  		selectedText.push(highlights[i].textContent);
+  		if (highlights[i] != null) {
+			selectedText.push(highlights[i].textContent);
+  		}
   	}
   	sendResponse({array: selectedText});
   });
@@ -40,8 +42,30 @@ document.addEventListener('copy', function(e) {
 // removes the most recent selection when ctrl + z is pressed
 document.addEventListener('keydown', function(e) {
 	if (highlights.length != 0 && e.ctrlKey && e.key == "z") {
-		removeHighlight(highlights.length - 1);
-		highlights.splice(highlights.length - 1, 1);
+		var lastEntry = highlights[highlights.length - 1];
+		// stores id's of child selections to be removed
+		var removeArray = new Array();
+		//stores underlying highlights of the last selection
+		var childElements;
+		// removes underneath selections if they exist  
+		if (lastEntry != null) {
+			childElements = lastEntry.children;
+			for (var i = 0; i < childElements.length; i++) {
+				removeArray.push(childElements[i].id);
+			}
+			for (var i = 0; i < removeArray.length; i++) {
+				removeHighlight(removeArray[i]);
+			}
+		}
+		// removes most recent selection
+		for (var i = highlights.length - 1; i >= 0; i--) {
+			if (highlights[i] != null) {
+				removeHighlight(i);
+				highlights.pop();
+				break;
+			}
+			highlights.pop();
+		}
 	}
 });
 
@@ -54,13 +78,15 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
 function getSelectedText() {
 	var text = "";
  	for (var i = 0; i < highlights.length; i++) {
- 		text += highlights[i].textContent;
- 		if (i != highlights.length - 1) {
- 			if (copyByNewLine) {
- 				text += "\n";
- 			}
- 			else {
- 				text += " ";
+ 		if (highlights[i] != null) {
+	 		text += highlights[i].textContent;
+ 			if (i != highlights.length - 1) {
+ 				if (copyByNewLine) {
+ 					text += "\n";
+ 				}
+ 				else {
+ 					text += " ";
+ 				}
  			}
  		}
 	}
@@ -69,30 +95,51 @@ function getSelectedText() {
 
 // highlights selected text in blue
 function highlightText() {
+	var selection = window.getSelection();
+	if (selection.toString() == "") {
+		return;
+	}
 	// create Range object of selected text
-	var selectionRange = window.getSelection().getRangeAt(0);
+	var selectionRange = selection.getRangeAt(0);
 
 	// create a node with a highlighted attribute
-	var highlightNode = document.createElement("span");
+	var highlightNode = document.createElement("highlight");
 	highlightNode.style.color = "white";
 	highlightNode.style.backgroundColor = 'rgb(' + 51 + ',' + 144 + ',' + 255 + ')';
 	
-	// surround the text with the highlighting node
-	selectionRange.surroundContents(highlightNode);
-
-	// stores highlight node so it can be deleted later
-	// checks for empty selection from ctrl clicking on blank space
-	if (highlightNode.textContent != "") {
-		highlights.push(highlightNode);
+	// catches error when partially selecting a non-text node
+	try {
+		// surround text with the highlighting node
+		selectionRange.surroundContents(highlightNode);
+		// stores highlight node so it can be deleted later
+		// checks for empty selection from ctrl clicking on blank space
+		if (highlightNode.textContent != "") {
+			highlightNode.id = highlights.length;
+			highlights.push(highlightNode);
+			// console.log("Child Nodes: " + highlightNode.childNodes[0].childNodes.length);
+		}
+		// below can select partial non-text nodes but breaks formatting
+		// highlightNode.appendChild(selectionRange.extractContents());
+		// selectionRange.insertNode(highlightNode);
+	}
+	catch (error) {
+		// console.log(error);
 	}
 }
 
-// clears single selection
-function removeHighlight(x) {	
-	var replacedNode = highlights[x];
-	// replaces highlighted text with original text
-	var text = document.createTextNode(replacedNode.textContent);
-	replacedNode.parentNode.replaceChild(text, replacedNode);
+// clears single selection 
+function removeHighlight(x) {
+	if (highlights[x] != null) {
+		var replacedNode = highlights[x];
+
+		// code below sometimes removes formatting (bold text, italics) 
+		// var text = document.createTextNode(replacedNode.textContent);
+		// replacedNode.parentNode.replaceChild(text, replacedNode);
+
+		// replaces highlighted text with original text
+		replacedNode.outerHTML = replacedNode.innerHTML;
+		highlights[x] = null;
+	}
 }
 
 // clears all selected text
