@@ -1,5 +1,5 @@
 {
-	"manifest_version": 3,
+	"manifest_version": 2,
 	"name": "Non-Adjacent Text Selection",
 	"version": "1",
 	"description": "Allows copying and searching of non-adjacent text selections.",
