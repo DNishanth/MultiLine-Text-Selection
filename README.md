@@ -1,5 +1,5 @@
 # Non-Adjacent Text Selection
-Allows non-adjacent text selections in Chrome. Text can be copied to clipboard through ctrl-c or the right-click copy option.
+Allows multiple concurrent text selections in Chrome. Text can be copied to clipboard through ctrl-c or the right-click copy option.
 You can also Google search the text through the right click selection menu.
 
 ## Getting Started
@@ -27,7 +27,7 @@ If 'Copy With Spaces' is selected, each selection will be separated by spaces wh
 - This extension is intended to be used on text. Selections on non-text areas such as hyperlinks will fail.
 
 ### Issues
-- Toggling copy options will sometimes not take effect. Toggling again will fix this.
+- Selections which only partially contain formatted text will fail.
 - Selecting text will rarely remove spaces between words.
 - Selections are rarely not cleared after clicking. Refresh the page if this happens.
 
