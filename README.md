@@ -1,5 +1,5 @@
-# Non-Adjacent Text Selection
-Allows multiple concurrent text selections in Chrome. Text can be copied to clipboard through ctrl-c or the right-click copy option.
+# Noncontiguous Text Selection
+Allows the user to make concurrent noncontiguous text selections in Chrome. Text can be copied to clipboard through ctrl-c or the right-click copy option.
 You can also Google search the text through the right click selection menu.
 
 ## Getting Started
