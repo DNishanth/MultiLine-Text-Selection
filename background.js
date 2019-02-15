@@ -5,12 +5,34 @@ function multiSearchHelper(searches) {
         // between entries
         if (searches[x] != "") {
             chrome.tabs.create({
-            url: "http://www.google.com/search?q=" + searches[x],
-            active: false
+                url: "http://www.google.com/search?q=" + searches[x],
+                active: false
             });
         }
     }
 }
+
+// creates context menu options when any of the selections are right clicked
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if (request.message == "addOptions") {
+            chrome.contextMenus.removeAll(function() {
+                chrome.contextMenus.create({
+                    id: "1",
+                    title: "MultiSearch",
+                    contexts: ["page", "selection"]
+                });
+                chrome.contextMenus.create({
+                    id: "2",
+                    title: "CombinedSearch",
+                    contexts: ["page", "selection"]
+                });
+            });
+        }
+        else if (request.message == "removeOptions") {
+            chrome.contextMenus.removeAll();
+        }
+    });
 
 // creates a new google search tab for each line of text selected
 // called when the context menu item is clicked
@@ -39,8 +61,8 @@ function onClickSearch(info, tab) {
 function defaultSelectionSearch() {
     var searches;
     chrome.tabs.executeScript( {
-    code: "window.getSelection().toString();"
-}, function(selection) {
+        code: "window.getSelection().toString();"
+    }, function(selection) {
     // splits selected text by newlines
     searches = selection[0].split("\n");
     multiSearchHelper(searches);
@@ -69,16 +91,3 @@ function combinedSearch(selections) {
 }
 
 chrome.contextMenus.onClicked.addListener(onClickSearch);
-
-chrome.runtime.onInstalled.addListener(function() {
-  chrome.contextMenus.create({
-	id: "1",
-    title: "MultiSearch",
-    contexts: ["selection"]
-  });
-  chrome.contextMenus.create({
-    id: "2",
-    title: "CombinedSearch",
-    contexts: ["selection"]
-  });
-});

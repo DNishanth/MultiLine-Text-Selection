@@ -18,15 +18,25 @@ chrome.runtime.onMessage.addListener(
 
 // highlights selected text when mouseup and ctrl down
 document.addEventListener("mouseup", function(e) {
-	if (e.ctrlKey) {
+	if (e.ctrlKey && e.target.nodeName != "HIGHLIGHT") {
 		highlightText();
 	}
 });
 
 // clears all selected text when left mousedown and ctrl up
+// and adds options to context menu when a selection is clicked
 document.addEventListener("mousedown", function(e) {
 	if (!e.ctrlKey && (e.button == 0)) {
 		removeHighlights();
+	}
+
+	if (e.button == 2) {
+		if (e.target.nodeName == "HIGHLIGHT") {
+			chrome.runtime.sendMessage({message: "addOptions"});
+		}
+		else {
+			chrome.runtime.sendMessage({message: "removeOptions"});
+		}
 	}
 });
 
@@ -83,6 +93,7 @@ function getSelectedText() {
  			if (i != highlights.length - 1) {
  				if (copyByNewLine) {
  					text += "\n";
+ 					console.log("added a newline");
  				}
  				else {
  					text += " ";
