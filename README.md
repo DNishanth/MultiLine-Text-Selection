@@ -12,7 +12,7 @@ You can also install the extension directly from the Chrome Web Store at:
 ### Usage
 Make each selection while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo with ctrl-z.
 
-Right click the final selection (dark blue) for search options.
+Right click any selection for search options.
 Select MultiSearch to open a search tab for each selection.
 Select CombinedSearch to open a single search tab for each selection separated by a space.
 
@@ -23,10 +23,11 @@ If 'Copy With Spaces' is selected, each selection will be separated by spaces wh
 ### Notes
 - When making overlapping selections, ctrl-z will remove the combined selection.
 - Selections are sent to the clipboard and searched in the order they are selected
-- Newlines when selecting multiple bullets or lines of text will be automatically removed.
+- Text containing new lines will be treated as separate selections when MultiSearching.
 - This extension is intended to be used on text. Selections on non-text areas such as hyperlinks will fail.
 
 ### Issues
+- Text copied from multiple selections will be in plain text.
 - Selections which only partially contain formatted text will fail.
 - Selecting text will rarely remove spaces between words.
 - Selections are rarely not cleared after clicking. Refresh the page if this happens.
