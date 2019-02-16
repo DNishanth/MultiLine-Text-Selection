@@ -8,17 +8,17 @@ var copyByNewLine = true; // default copy separates by newlines
 // initializes options menu and restores saved choices
 // defaults to Copy With Newlines
 chrome.storage.sync.get({copyByNewLine: true}, function(result) {
-		if (result.copyByNewLine == true) {
-			newlineButton.style.background = selectedColor;	
-			copyButton.style.background = unSelectedColor;
-			copyByNewLine = true;		
-		}
-		else if (result.copyByNewLine == false) {
-			newlineButton.style.background = unSelectedColor;	
-			copyButton.style.background = selectedColor;
-			copyByNewLine = false;
-		}
-	});
+	if (result.copyByNewLine == true) {
+		newlineButton.style.background = selectedColor;	
+		copyButton.style.background = unSelectedColor;
+		copyByNewLine = true;		
+	}
+	else if (result.copyByNewLine == false) {
+		newlineButton.style.background = unSelectedColor;	
+		copyButton.style.background = selectedColor;
+		copyByNewLine = false;
+	}
+});
 
 newlineButton.onclick = function() {
 	if (!copyByNewLine) {

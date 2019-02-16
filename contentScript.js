@@ -6,15 +6,15 @@ var copyByNewLine = true;
 
 // sends array of selected text to the background page
 chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-  	var selectedText = new Array();
-  	for (var i = 0; i < highlights.length; i++) {
-  		if (highlights[i] != null) {
-			selectedText.push(highlights[i].textContent);
-  		}
-  	}
-  	sendResponse({array: selectedText});
-  });
+	function(request, sender, sendResponse) {
+		var selectedText = new Array();
+		for (var i = 0; i < highlights.length; i++) {
+			if (highlights[i] != null) {
+				selectedText.push(highlights[i].textContent);
+			}
+		}
+		sendResponse({array: selectedText});
+	});
 
 // highlights selected text when mouseup and ctrl down
 document.addEventListener("mouseup", function(e) {
@@ -87,19 +87,18 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
 // selected text is concatenated, separated by newlines
 function getSelectedText() {
 	var text = "";
- 	for (var i = 0; i < highlights.length; i++) {
- 		if (highlights[i] != null) {
-	 		text += highlights[i].textContent;
- 			if (i != highlights.length - 1) {
- 				if (copyByNewLine) {
- 					text += "\n";
- 					console.log("added a newline");
- 				}
- 				else {
- 					text += " ";
- 				}
- 			}
- 		}
+	for (var i = 0; i < highlights.length; i++) {
+		if (highlights[i] != null) {
+			text += highlights[i].textContent;
+			if (i != highlights.length - 1) {
+				if (copyByNewLine) {
+					text += "\n";
+				}
+				else {
+					text += " ";
+				}
+			}
+		}
 	}
 	return text;
 }
