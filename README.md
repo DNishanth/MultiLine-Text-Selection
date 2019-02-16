@@ -27,7 +27,7 @@ If 'Copy With Spaces' is selected, each selection will be separated by spaces wh
 - This extension is intended to be used on text. Selections on non-text areas such as hyperlinks will fail.
 
 ### Issues
-- Text copied from multiple selections will be in plain text.
+- Selections made with ctrl will be in plain text.
 - Selections which only partially contain formatted text will fail.
 - Selecting text will rarely remove spaces between words.
 - Selections are rarely not cleared after clicking. Refresh the page if this happens.
