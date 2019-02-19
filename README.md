@@ -7,7 +7,7 @@ You can also Google search the text through the right click selection menu.
 ### Installing
 Enable Developer Mode at chrome://extensions. Select 'Load unpacked' and choose the directory of this project. 
 
-You can also install the extension directly from the Chrome Web Store at: 
+You can also install the extension directly from the Chrome Web Store at: https://chrome.google.com/webstore/detail/noncontiguous-text-select/ajbomhojbckleofgngogoecoaefclnol
 
 ### Usage
 Make each selection while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo with ctrl-z.
