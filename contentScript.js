@@ -1,8 +1,12 @@
 // stores all currently highlighted nodes
 var highlights = new Array();
 
-// copy by newline if true, by spaces otherwise
+// adds newlines after selections if true
 var copyByNewLine = true;
+// adds spaces after selections if true
+var copyBySpaces = false;
+// adds a bullet before selections if true
+var copyByBullet = false;
 
 // sends array of selected text to the background page
 chrome.runtime.onMessage.addListener(
@@ -82,6 +86,8 @@ document.addEventListener('keydown', function(e) {
 // updates copy option
 chrome.storage.onChanged.addListener(function(changes, areaName) {
 	copyByNewLine = changes.copyByNewLine.newValue;
+	copyBySpaces = changes.copyBySpaces.newValue;
+	copyByBullet = changes.copyByBullet.newValue;
 });
 
 // selected text is concatenated, separated by newlines
@@ -89,9 +95,12 @@ function getSelectedText() {
 	var text = "";
 	for (var i = 0; i < highlights.length; i++) {
 		if (highlights[i] != null) {
+			if (copyByBullet) {
+				text += "• "
+			}
 			text += highlights[i].textContent;
 			if (i != highlights.length - 1) {
-				if (copyByNewLine) {
+				if (copyByNewLine || copyByBullet) {
 					text += "\n";
 				}
 				else {
