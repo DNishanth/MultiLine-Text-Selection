@@ -50,6 +50,8 @@ document.addEventListener('copy', function(e) {
 	if (highlights.length != 0) {
 		e.clipboardData.setData('text/plain', getSelectedText());
 		e.preventDefault(); // prevents default copy event
+		console.log("Newline: " + copyByNewLine + "\nSpace: "
+			+ copyBySpaces + "\nBullet: " + copyByBullet);
 	}
 });
 
@@ -85,9 +87,9 @@ document.addEventListener('keydown', function(e) {
 
 // updates copy option
 chrome.storage.onChanged.addListener(function(changes, areaName) {
-	copyByNewLine = changes.copyByNewLine.newValue;
-	copyBySpaces = changes.copyBySpaces.newValue;
-	copyByBullet = changes.copyByBullet.newValue;
+	for (var key in changes) {
+		window[key] = changes[key].newValue;
+	 }
 });
 
 // selected text is concatenated, separated by newlines

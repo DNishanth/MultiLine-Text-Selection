@@ -9,7 +9,8 @@ var copyByBullet = false;
 
 // initializes options menu and restores saved choices
 // defaults to Copy With Newlines
-chrome.storage.sync.get({copyByNewLine: true, copyBySpaces: false, copyByBullet: false}, function(result) {
+chrome.storage.sync.get({copyByNewLine: true, copyBySpaces: false,
+ copyByBullet: false}, function(result) {
 	if (result.copyByNewLine == true) {
 		newlineButton.style.background = selectedColor;
 		copyByNewLine = true;
@@ -47,8 +48,8 @@ newlineButton.onclick = function() {
 		newlineButton.style.background = selectedColor;
 		spaceButton.style.background = unSelectedColor;
 		bulletButton.style.background = unSelectedColor;
-		chrome.storage.sync.set({"copyByNewLine": true,
-			"copyBySpaces": false, "copyByBullet": false});
+		chrome.storage.sync.set({copyByNewLine: true,
+			copyBySpaces: false, copyByBullet: false});
 	}
 };
 
@@ -60,8 +61,8 @@ spaceButton.onclick = function() {
 		newlineButton.style.background = unSelectedColor;
 		spaceButton.style.background = selectedColor;
 		bulletButton.style.background = unSelectedColor;
-		chrome.storage.sync.set({"copyByNewLine": false,
-			"copyBySpaces": true, "copyByBullet": false});
+		chrome.storage.sync.set({copyByNewLine: false,
+			copyBySpaces: true, copyByBullet: false});
 	}
 };
 
@@ -73,7 +74,7 @@ bulletButton.onclick = function() {
 		newlineButton.style.background = unSelectedColor;
 		spaceButton.style.background = unSelectedColor;
 		bulletButton.style.background = selectedColor;
-		chrome.storage.sync.set({"copyByNewLine": false,
-			"copyBySpaces": false, "copyByBullet": true});
+		chrome.storage.sync.set({copyByNewLine: false,
+			copyBySpaces: false, copyByBullet: true});
 	}
 };
