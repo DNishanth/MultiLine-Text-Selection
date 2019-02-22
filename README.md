@@ -19,6 +19,7 @@ Select CombinedSearch to open a single search tab for each selection separated b
 Select the extension icon in the Chrome toolbar (top-right of the browser) to toggle copy options.
 If 'Copy With Newline' is selected, each selection will be separated by a newline when copying.
 If 'Copy With Spaces' is selected, each selection will be separated by spaces when copying.
+If 'Copy With Bullets' is selected, each selection will be copied as a separate bullet.
 
 ### Notes
 - When making overlapping selections, ctrl-z will remove the combined selection.
