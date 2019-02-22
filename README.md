@@ -7,7 +7,7 @@ You can also Google search the text through the right click selection menu.
 ### Installing
 Enable Developer Mode at chrome://extensions. Select 'Load unpacked' and choose the directory of this project. 
 
-You can also install the extension directly from the Chrome Web Store at: 
+You can also install the extension directly from the Chrome Web Store at: https://chrome.google.com/webstore/detail/noncontiguous-text-select/ajbomhojbckleofgngogoecoaefclnol
 
 ### Usage
 Make each selection while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo with ctrl-z.
@@ -27,7 +27,7 @@ If 'Copy With Spaces' is selected, each selection will be separated by spaces wh
 - This extension is intended to be used on text. Selections on non-text areas such as hyperlinks will fail.
 
 ### Issues
-- Text copied from multiple selections will be in plain text.
+- Selections made with ctrl will be in plain text.
 - Selections which only partially contain formatted text will fail.
 - Selecting text will rarely remove spaces between words.
 - Selections are rarely not cleared after clicking. Refresh the page if this happens.
