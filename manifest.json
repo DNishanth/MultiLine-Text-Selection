@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Noncontiguous Text Selection",
-  "version": "2",
+  "version": "3",
   "description": "Allows copying and searching of noncontiguous text selections.",
   "background": {
    "scripts": ["background.js"],
