@@ -8,6 +8,14 @@ var copyBySpaces = false;
 // adds a bullet before selections if true
 var copyByBullet = false;
 
+// checks if browser is running on MacOS
+function isMacOS() {
+	return navigator.platform.indexOf('Mac') > -1;
+}
+
+// used to replace ctrl with cmd when using a mac 
+var isMac = isMacOS();
+
 // sends array of selected text to the background page
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
@@ -22,7 +30,7 @@ chrome.runtime.onMessage.addListener(
 
 // highlights selected text when mouseup and ctrl down
 document.addEventListener("mouseup", function(e) {
-	if (e.ctrlKey && e.target.nodeName != "HIGHLIGHT") {
+	if (((!isMac && e.ctrlKey) || (isMac && e.metaKey)) && e.target.nodeName != "HIGHLIGHT") {
 		highlightText();
 	}
 });
@@ -30,7 +38,7 @@ document.addEventListener("mouseup", function(e) {
 // clears all selected text when left mousedown and ctrl up
 // and adds options to context menu when a selection is clicked
 document.addEventListener("mousedown", function(e) {
-	if (!e.ctrlKey && (e.button == 0)) {
+	if (((!isMac && !e.ctrlKey) || (isMac && !e.metaKey)) && (e.button == 0)) {
 		removeHighlights();
 	}
 
@@ -57,7 +65,7 @@ document.addEventListener('copy', function(e) {
 
 // removes the most recent selection when ctrl + z is pressed
 document.addEventListener('keydown', function(e) {
-	if (highlights.length != 0 && e.ctrlKey && e.key == "z") {
+	if (highlights.length != 0 && ((!isMac && e.ctrlKey) || (isMac && e.metaKey)) && e.key == "z") {
 		var lastEntry = highlights[highlights.length - 1];
 		// stores id's of child selections to be removed
 		var removeArray = new Array();
