@@ -10,7 +10,7 @@ Enable Developer Mode at chrome://extensions. Select 'Load unpacked' and choose 
 You can also install the extension directly from the Chrome Web Store at: https://chrome.google.com/webstore/detail/noncontiguous-text-select/ajbomhojbckleofgngogoecoaefclnol
 
 ### Usage
-Make each selection while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo with ctrl-z.
+Make each selection while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo with ctrl-z. On Macs, use cmd instead of ctrl. Lock selections with shift-L. This prevents accidentally clearing selections by clicking. While locked, ctrl/cmd is not needed to make selections. All highlighted text will remain until cleared by pressing shift-L again.
 
 Right click any selection for search options.
 Select MultiSearch to open a search tab for each selection.
