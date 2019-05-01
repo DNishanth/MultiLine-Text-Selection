@@ -16,6 +16,9 @@ function isMacOS() {
 // used to replace ctrl with cmd when using a mac 
 var isMac = isMacOS();
 
+// allows selection without holding ctrl
+var lockSelect = false;
+
 // sends array of selected text to the background page
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
@@ -29,16 +32,18 @@ chrome.runtime.onMessage.addListener(
 	});
 
 // highlights selected text when mouseup and ctrl down
+// ctrl not needed when selection lock is on
 document.addEventListener("mouseup", function(e) {
-	if (((!isMac && e.ctrlKey) || (isMac && e.metaKey)) && e.target.nodeName != "HIGHLIGHT") {
+	if ((e.target.nodeName != "HIGHLIGHT") && (lockSelect || ((!isMac && e.ctrlKey) || (isMac && e.metaKey)) )) {
 		highlightText();
 	}
 });
 
 // clears all selected text when left mousedown and ctrl up
 // and adds options to context menu when a selection is clicked
+// disabled when lock selection is on, clear by shift-L instead
 document.addEventListener("mousedown", function(e) {
-	if (((!isMac && !e.ctrlKey) || (isMac && !e.metaKey)) && (e.button == 0)) {
+	if (lockSelect == false && (((!isMac && !e.ctrlKey) || (isMac && !e.metaKey)) && (e.button == 0))) {
 		removeHighlights();
 	}
 
@@ -58,8 +63,6 @@ document.addEventListener('copy', function(e) {
 	if (highlights.length != 0) {
 		e.clipboardData.setData('text/plain', getSelectedText());
 		e.preventDefault(); // prevents default copy event
-		console.log("Newline: " + copyByNewLine + "\nSpace: "
-			+ copyBySpaces + "\nBullet: " + copyByBullet);
 	}
 });
 
@@ -90,6 +93,18 @@ document.addEventListener('keydown', function(e) {
 			}
 			highlights.pop();
 		}
+	}
+});
+
+// toggles selection lock so that ctrl isn't needed to select
+// selections can only be removed by toggling again
+// 76 = L
+document.addEventListener('keydown', function(e) {
+	if (e.shiftKey && e.keyCode == 76) {
+		if (lockSelect) {
+			removeHighlights();
+		}
+		lockSelect = !lockSelect;
 	}
 });
 
