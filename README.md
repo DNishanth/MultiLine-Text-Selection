@@ -22,6 +22,7 @@ If 'Copy With Spaces' is selected, each selection will be separated by spaces wh
 If 'Copy With Bullets' is selected, each selection will be copied as a separate bullet.
 
 ### Notes
+- This extension is automatically disabled on the Chrome store page. Try it out on other sites.
 - When making overlapping selections, ctrl-z will remove the combined selection.
 - Selections are sent to the clipboard and searched in the order they are selected
 - Text containing new lines will be treated as separate selections when MultiSearching.
