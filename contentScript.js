@@ -100,7 +100,7 @@ document.addEventListener('keydown', function(e) {
 // selections can only be removed by toggling again
 // 76 = L
 document.addEventListener('keydown', function(e) {
-	if (e.shiftKey && e.keyCode == 76) {
+	if (e.shiftKey && ((!isMac && e.ctrlKey) || (isMac && e.metaKey)) && e.keyCode == 76) {
 		if (lockSelect) {
 			removeHighlights();
 		}
