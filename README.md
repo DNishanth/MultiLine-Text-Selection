@@ -1,5 +1,5 @@
 # Noncontiguous Text Selection
-Allows the user to make concurrent noncontiguous text selections in Chrome. Text can be copied to clipboard through ctrl-c or the right-click copy option.
+Allows the user to make concurrent noncontiguous text selections in Chrome. Text can be copied to clipboard through ctrl+c or the right-click copy option.
 You can also Google search the text through the right click selection menu.
 
 ## Getting Started
@@ -10,7 +10,7 @@ Enable Developer Mode at chrome://extensions. Select 'Load unpacked' and choose 
 You can also install the extension directly from the Chrome Web Store at: https://chrome.google.com/webstore/detail/noncontiguous-text-select/ajbomhojbckleofgngogoecoaefclnol
 
 ### Usage
-Make each selection while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo with ctrl-z. On Macs, use cmd instead of ctrl. Lock selections with ctrl-shift-L. This prevents accidentally clearing selections by clicking. While locked, ctrl/cmd is not needed to make selections. All highlighted text will remain until cleared by pressing ctrl-shift-L again.
+Make each selection while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo with ctrl+z. On Macs, use cmd instead of ctrl. Lock selections with ctrl+shift+L. This prevents accidentally clearing selections by clicking. While locked, ctrl/cmd is not needed to make selections. All highlighted text will remain until cleared by pressing ctrl+shift+L again.
 
 Right click any selection for search options.
 Select MultiSearch to open a search tab for each selection.
@@ -23,7 +23,7 @@ If 'Copy With Bullets' is selected, each selection will be copied as a separate 
 
 ### Notes
 - This extension is automatically disabled on the Chrome store page. Try it out on other sites.
-- When making overlapping selections, ctrl-z will remove the combined selection.
+- When making overlapping selections, ctrl+z will remove the combined selection.
 - Selections are sent to the clipboard and searched in the order they are selected
 - Text containing new lines will be treated as separate selections when MultiSearching.
 - This extension is intended to be used on text. Selections on non-text areas such as hyperlinks will fail.
