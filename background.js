@@ -1,11 +1,23 @@
 // creates a new tab for each entry in the searches array
-function multiSearchHelper(searches) {
+function multiSearchHelper(searches, flag) {
     for (var x in searches) {
         // getSelection().split(\n) sometimes results in blank spaces
         // between entries
-        if (searches[x] != "") {
+        if (searches[x] != "" && (flag == 1 || flag == 2)) {
             chrome.tabs.create({
                 url: "http://www.google.com/search?q=" + searches[x],
+                active: false
+            });
+        }
+        else if (searches[x] != "" && (flag == 3 || flag == 4)) {
+            chrome.tabs.create({
+                url: "https://www.youtube.com/results?search_query=" + searches[x],
+                active: false
+            });
+        }
+        else if (searches[x] != "" && (flag == 5 || flag == 6)) {
+            chrome.tabs.create({
+                url: "https://en.wikipedia.org/w/index.php?search=" + searches[x],
                 active: false
             });
         }
@@ -27,6 +39,26 @@ chrome.runtime.onMessage.addListener(
                     title: "CombinedSearch",
                     contexts: ["page", "selection"]
                 });
+                chrome.contextMenus.create({
+                    id: "3",
+                    title: "MultiYouTubeSearch",
+                    contexts: ["page", "selection"]
+                });
+                chrome.contextMenus.create({
+                    id: "4",
+                    title: "CombinedYouTubeSearch",
+                    contexts: ["page", "selection"]
+                });
+                chrome.contextMenus.create({
+                    id: "5",
+                    title: "MultiWikiSearch",
+                    contexts: ["page", "selection"]
+                });
+                chrome.contextMenus.create({
+                    id: "6",
+                    title: "CombinedWikiSearch",
+                    contexts: ["page", "selection"]
+                });
             });
         }
         else if (request.message == "removeOptions") {
@@ -41,15 +73,16 @@ function onClickSearch(info, tab) {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {message: "Request Selected Text"},
             function(response) {
-                if (response.array.length == 0) {
+            	var flag = info.menuItemId;
+            	if (response.array.length == 0) {
                     defaultSelectionSearch();
                 }
-                else if (info.menuItemId == "1") {
-                    multipleSelectionSearch(response.array);
-                }
-                else if (info.menuItemId == "2") {
-                    combinedSearch(response.array);   
-                }
+            	else if (flag == 1 || flag == 3 || flag == 5) {
+            		multipleSelectionSearch(response.array, flag);
+            	}
+            	else if (flag == 2 || flag == 4 || flag == 6) {
+            		combinedSearch(response.array, flag);
+            	}
             });
     });
     // splits selected text by spaces, using onClicked info
@@ -65,29 +98,29 @@ function defaultSelectionSearch() {
     }, function(selection) {
     // splits selected text by newlines
     searches = selection[0].split("\n");
-    multiSearchHelper(searches);
+    multiSearchHelper(searches, 1);
 });
 }
 
 // creates a search tab for each line of multiple text selections
-function multipleSelectionSearch(selections) {
+function multipleSelectionSearch(selections, flag) {
     var searches;
     for (var x in selections) {
         // splits selected text by newlines
         searches = selections[x].split("\n");
-        multiSearchHelper(searches);            
+        multiSearchHelper(searches, flag);            
     }
 }
 
 // combines multiple selections to create a single search tab
-function combinedSearch(selections) {
+function combinedSearch(selections, flag) {
     var searches = new Array();
     var combinedSearch = "";
     for (var x in selections) {
         combinedSearch += (selections[x] + " ");
     }
     searches.push(combinedSearch);
-    multiSearchHelper(searches);
+    multiSearchHelper(searches, flag);
 }
 
 chrome.contextMenus.onClicked.addListener(onClickSearch);
