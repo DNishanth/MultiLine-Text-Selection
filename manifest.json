@@ -11,7 +11,7 @@
   {
    "matches": ["http://*/*", "https://*/*"],
    "run_at": "document_idle",
-   "js": ["contentScript.js"]
+   "js": ["rangy-core.js", "rangy-classapplier.js", "rangy-highlighter.js", "contentScript.js"]
  }
 ],
  "browser_action": {
