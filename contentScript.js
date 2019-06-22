@@ -8,7 +8,7 @@ var isMac = isMacOS();
 var bgColor = "rgb(51, 144, 255)"; // windows blue
 var textColor = "; color: white}"; // windows white
 
-if (!isMac) {
+if (isMac) {
 	bgColor = "rgb(172, 213, 255)"; // mac light blue
 	textColor = "}"; // mac no text color
 }
