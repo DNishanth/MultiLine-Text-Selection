@@ -1,7 +1,22 @@
+// checks if browser is running on MacOS
+function isMacOS() {
+	return navigator.platform.indexOf('Mac') > -1;
+}
+
+// used to replace ctrl with cmd when using a mac 
+var isMac = isMacOS();
+var bgColor = "rgb(51, 144, 255)"; // windows blue
+var textColor = "; color: white}"; // windows white
+
+if (!isMac) {
+	bgColor = "rgb(172, 213, 255)"; // mac light blue
+	textColor = "}"; // mac no text color
+}
+
 // https://stackoverflow.com/questions/43676331/creating-a-css-class-with-a-javascript-object-or-var/43676931
 // creates css class that will be applied to each selection with rangy
 var element = document.createElement("style");
-element.innerHTML = ".hiclass {background-color:" + "rgb(51, 144, 255)" + "; color: white}";
+element.innerHTML = ".hiclass {background-color:" + bgColor + textColor;
 var header = document.getElementsByTagName("HEAD")[0];
 header.appendChild(element);
 
@@ -28,14 +43,6 @@ chrome.storage.sync.get({copyByNewLine: true, copyBySpaces: false,
  	copyBySpaces = result.copyBySpaces;
  	copyByBullet = result.copyByBullet;
 });
-
-// checks if browser is running on MacOS
-function isMacOS() {
-	return navigator.platform.indexOf('Mac') > -1;
-}
-
-// used to replace ctrl with cmd when using a mac 
-var isMac = isMacOS();
 
 // allows selection without holding ctrl
 var lockSelect = false;
