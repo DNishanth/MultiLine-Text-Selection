@@ -28,7 +28,7 @@ If 'Copy With Bullets' is selected, each selection will be copied as a separate 
 - Selections are sent to the clipboard and searched in the order they are selected.
 - When making overlapping selections, ctrl+z will remove the combined selection.
 - A single selection containing text on separate lines will be treated as multiple selections when MultiSearching. This keeps you from having to individually select multiple lines that are grouped together.
-- The version of this extension as of 6/20/19 used only my own system of displaying multiple selections. The current version uses Rangy, a more robust selection system, to support selections in areas where they previously failed. 
+- The version of this extension as of 6/20/19 used only my own system of displaying multiple selections. The current version uses Rangy, a more robust selection system, to support selections in areas where they previously failed. (https://github.com/timdown/rangy/)
 
 
 ### Issues
