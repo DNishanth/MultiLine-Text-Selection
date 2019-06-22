@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Noncontiguous Text Selection",
-  "version": "7",
-  "description": "Allows copying and searching of noncontiguous text selections.",
+  "name": "MultiLine Text Selection",
+  "version": "8",
+  "description": "Allows copying and searching of multiple concurrent text selections.",
   "background": {
    "scripts": ["background.js"],
    "persistent": false
