@@ -1,6 +1,6 @@
-# Noncontiguous Text Selection
-Allows the user to make concurrent noncontiguous text selections in Chrome. Text can be copied to clipboard through ctrl+c or the right-click copy option.
-You can also Google search the text through the right click selection menu.
+# MultiLine Text Selection
+Allows the user to make multiple text selections in noncontiguous areas of a Chrome webpage. Text can be copied to clipboard through ctrl+c or the right-click copy option.
+You can also search the text on Google, YouTube, and Wikipedia through the right click selection menu.
 
 ## Getting Started
 
@@ -23,15 +23,19 @@ If 'Copy With Bullets' is selected, each selection will be copied as a separate 
 
 ### Notes
 - This extension is automatically disabled on the Chrome store page. Try it out on other sites.
+- Refresh any current tabs when first installing to activate the extension on those pages. This is not necessary for new tabs.
+- When selecting separate words throughout a web page, you can double-click while holding ctrl instead of dragging to select.
+- Selections are sent to the clipboard and searched in the order they are selected.
 - When making overlapping selections, ctrl+z will remove the combined selection.
-- Selections are sent to the clipboard and searched in the order they are selected
-- Text containing new lines will be treated as separate selections when MultiSearching.
-- This extension is intended to be used on text. Selections on non-text areas such as hyperlinks will fail.
+- A single selection containing text on separate lines will be treated as multiple selections when MultiSearching. This keeps you from having to individually select multiple lines that are grouped together.
+- The version of this extension as of 6/20/19 used only my own system of displaying multiple selections. The current version uses Rangy, a more robust selection system, to support selections in areas where they previously failed. 
+
 
 ### Issues
+- The current version now uses Rangy, a selection library based on Range objects, to make more areas accessible for selection. This sometimes leads to selections disappearing.
+- Selections crossing multiple elements can rarely include collapsed text.
+- Some types of selections cannot be copied or searched. Undo such a selection or refresh to continue.
 - Selections made with ctrl will be in plain text.
-- Selections which only partially contain formatted text will fail.
-- Selecting text will rarely remove spaces between words.
 - Selections are rarely not cleared after clicking. Refresh the page if this happens.
 
 ## License
