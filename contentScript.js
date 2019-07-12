@@ -158,6 +158,10 @@ document.addEventListener('keydown', function(e) {
 	var highlights = highlighter.highlights;
 	if (highlights.length != 0 && ((!isMac && e.ctrlKey) 
 		|| (isMac && e.metaKey)) && e.key == "z") {
+		var currSelection = window.getSelection();
+		if (currSelection) {
+			currSelection.empty();
+		}
 		highlighter.removeHighlights([highlights[highlights.length-1]]);
 	}
 });
