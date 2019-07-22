@@ -7,7 +7,7 @@ You can also search the text on Google, YouTube, and Wikipedia through the right
 ### Installing
 Enable Developer Mode at chrome://extensions. Select 'Load unpacked' and choose the directory of this project. 
 
-You can also install the extension directly from the Chrome Web Store at: https://chrome.google.com/webstore/detail/noncontiguous-text-select/ajbomhojbckleofgngogoecoaefclnol
+You can also install the extension directly from the Chrome Web Store at: https://chrome.google.com/webstore/detail/multiline-text-selection/ajbomhojbckleofgngogoecoaefclnol
 
 ### Usage
 Make each selection while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo with ctrl+z. On Macs, use cmd instead of ctrl. Lock selections with ctrl+shift+L. This prevents accidentally clearing selections by clicking. While locked, ctrl/cmd is not needed to make selections. All highlighted text will remain until cleared by pressing ctrl+shift+L again.
