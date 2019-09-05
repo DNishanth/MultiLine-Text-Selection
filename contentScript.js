@@ -86,9 +86,10 @@ document.addEventListener("mouseup", function(e) {
 // and adds options to context menu when a selection is clicked
 // disabled when lock selection is on, clear by ctrl+shift+L instead
 document.addEventListener("mousedown", function(e) {
-	if (lockSelect == false && (((!isMac && !e.ctrlKey) 
-		|| (isMac && !e.metaKey)) && (e.button == 0))) {
-		highlighter.removeAllHighlights();
+	if (lockSelect == false) {
+		if (((!isMac && !e.ctrlKey) || (isMac && !e.metaKey)) && (e.button == 0) ) {
+			highlighter.removeAllHighlights();
+		}
 	}
 
 	if (e.button == 2) {
