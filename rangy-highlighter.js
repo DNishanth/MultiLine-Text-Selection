@@ -551,7 +551,6 @@
                         highlight.classApplier.className,
                         highlight.containerElementId
                     ];
-
                     if (options.serializeHighlightText) {
                         parts.push(highlight.getText());
                     }
