@@ -10,7 +10,9 @@ Enable Developer Mode at chrome://extensions. Select 'Load unpacked' and choose 
 You can also install the extension directly from the Chrome Web Store at: https://chrome.google.com/webstore/detail/multiline-text-selection/ajbomhojbckleofgngogoecoaefclnol
 
 ### Usage
-Make additional text selections while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo the most recent selection with ctrl+z. On Macs, use cmd instead of ctrl. Lock selections with ctrl+shift+L. When selections are locked, they will not disappear when left-clicking. This prevents accidentally clicking out and clearing your selections. While locked, ctrl/cmd is not needed to make selections. Leave locked mode and clear all highlighted text by pressing ctrl+shift+L again.
+Make additional text selections while holding down ctrl. Clear all selections by clicking without holding ctrl. Undo the most recent selection with ctrl+z. On Macs, use cmd instead of ctrl. 
+
+Lock selections with ctrl+shift+L. When selections are locked, they will not disappear when left-clicking. This prevents accidentally clicking out and clearing your selections. While locked, ctrl/cmd is not needed to make selections. Leave locked mode and clear all highlighted text by pressing ctrl+shift+L again.
 
 Right click any selection for search options.
 Select MultiSearch to open a search tab for each selection.
