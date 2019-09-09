@@ -1,3 +1,6 @@
+// add option when script is loaded so it will appear in context menu on first use
+chrome.runtime.sendMessage({message: "addOptions"});
+
 // checks if browser is running on MacOS
 function isMacOS() {
 	return navigator.platform.indexOf('Mac') > -1;
@@ -12,6 +15,8 @@ if (isMac) {
 	bgColor = "rgb(172, 213, 255)"; // mac light blue
 	textColor = "}"; // mac no text color
 }
+
+// var serializedSelections;
 
 // https://stackoverflow.com/questions/43676331/creating-a-css-class-with-a-javascript-object-or-var/43676931
 // creates css class that will be applied to each selection with rangy
@@ -77,6 +82,10 @@ chrome.runtime.onMessage.addListener(
 // highlights selected text when mouseup and ctrl down
 // ctrl not needed when selection lock is on
 document.addEventListener("mouseup", function(e) {
+	// if (lockSelect || ((!isMac && !e.ctrlKey) || (isMac && !e.metaKey)) && highlighter.highlights.length == 0 ) {
+	// 	// serializedSelections = rangy.serializeSelection();
+	// 	// document.getSelection().removeAllRanges();
+	// }
 	if (lockSelect || ((!isMac && e.ctrlKey) || (isMac && e.metaKey)) ) {
 		highlighter.highlightSelection("hiclass");
 	}
@@ -87,7 +96,20 @@ document.addEventListener("mouseup", function(e) {
 // disabled when lock selection is on, clear by ctrl+shift+L instead
 document.addEventListener("mousedown", function(e) {
 	if (lockSelect == false) {
-		if (((!isMac && !e.ctrlKey) || (isMac && !e.metaKey)) && (e.button == 0) ) {
+		if (((!isMac && e.ctrlKey) || (isMac && e.metaKey)) && (e.button == 0) && highlighter.highlights.length == 0) {
+			// try {
+			// 	rangy.deserializeSelection(serializedSelections);
+			// }
+			// catch(err) {
+			// 	serializedSelections = ""
+			// }
+			if (window.getSelection() != "") {
+				highlighter.highlightSelection("hiclass");
+			}
+		}
+		else if (((!isMac && !e.ctrlKey) || (isMac && !e.metaKey)) && (e.button == 0) ) {
+			// prevents outer element from being highlighted when there is a single highlight
+			document.getSelection().removeAllRanges(); 
 			highlighter.removeAllHighlights();
 		}
 	}
