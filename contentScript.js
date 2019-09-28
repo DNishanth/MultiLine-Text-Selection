@@ -107,9 +107,12 @@ document.addEventListener("mousedown", function(e) {
 				highlighter.highlightSelection("hiclass");
 			}
 		}
-		else if (((!isMac && !e.ctrlKey) || (isMac && !e.metaKey)) && (e.button == 0) ) {
+		else if (((!isMac && !e.ctrlKey) || (isMac && !e.metaKey)) && (e.button == 0) && (highlighter.highlights.length > 0)) {
 			// prevents outer element from being highlighted when there is a single highlight
-			document.getSelection().removeAllRanges(); 
+			var currSelection = window.getSelection();
+			if (currSelection != "") {
+				currSelection.empty();
+			}
 			highlighter.removeAllHighlights();
 		}
 	}
@@ -196,6 +199,10 @@ document.addEventListener('keydown', function(e) {
 	if (e.shiftKey && ((!isMac && e.ctrlKey) || (isMac && e.metaKey)) 
 		&& e.keyCode == 76) {
 		if (lockSelect) {
+			var currSelection = window.getSelection();
+			if (currSelection != "") {
+				currSelection.empty();
+			}
 			highlighter.removeAllHighlights();
 		}
 		lockSelect = !lockSelect;
