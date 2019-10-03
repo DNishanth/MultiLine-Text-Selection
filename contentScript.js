@@ -32,7 +32,7 @@ highlighter.addClassApplier(rangy.createClassApplier("hiclass", {
 	elementTagName: "span",
 	ignoreWhiteSpace: true,
 	tagNames: ["span", "a"],
-	elementProperties: {id: "HIGHLIGHT"}
+	elementProperties: {id: "HIGHLIGHT", draggable: "true"}
 }));
 
 // adds newlines after selections if true
@@ -79,6 +79,18 @@ chrome.runtime.onMessage.addListener(
 	sendResponse({array: selectedText});
 });
 
+// when a highlight element is dragged, set the drag text to the selection
+document.addEventListener('dragstart', function(e) {
+	if (e.target.id == "HIGHLIGHT") {
+		dragData = highlighter.getHighlightForElement(e.target).getText()
+		e.dataTransfer.setData('text/plain', dragData)
+	}
+	else if (e.target.parentNode.id == "HIGHLIGHT") {
+		dragData = highlighter.getHighlightForElement(e.target.parentNode).getText()
+		e.dataTransfer.setData('text/plain', dragData)
+	}
+});
+
 // highlights selected text when mouseup and ctrl down
 // ctrl not needed when selection lock is on
 document.addEventListener("mouseup", function(e) {
@@ -107,7 +119,7 @@ document.addEventListener("mousedown", function(e) {
 				highlighter.highlightSelection("hiclass");
 			}
 		}
-		else if (((!isMac && !e.ctrlKey) || (isMac && !e.metaKey)) && (e.button == 0) && (highlighter.highlights.length > 0)) {
+		else if (((!isMac && !e.ctrlKey) || (isMac && !e.metaKey)) && (e.button == 0) && (highlighter.highlights.length > 0) && (e.target.id != "HIGHLIGHT")) {
 			// prevents outer element from being highlighted when there is a single highlight
 			var currSelection = window.getSelection();
 			if (currSelection != "") {
