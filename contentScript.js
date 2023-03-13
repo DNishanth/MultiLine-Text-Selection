@@ -1,12 +1,12 @@
 // add option when script is loaded so it will appear in context menu on first use
-chrome.runtime.sendMessage({message: "addOptions"});
+chrome.runtime.sendMessage("addOptions"); // TODO: revisit this + message name
 
 // checks if browser is running on MacOS
 function isMacOS() {
 	return navigator.platform.indexOf('Mac') > -1;
 }
 
-// used to replace ctrl with cmd when using a mac 
+// used to replace ctrl with cmd when using a mac
 var isMac = isMacOS();
 var bgColor = "rgb(51, 144, 255)"; // windows blue
 var textColor = "; color: white}"; // windows white
@@ -131,10 +131,10 @@ document.addEventListener("mousedown", function(e) {
 
 	if (e.button == 2) {
 		if (e.target.id == "HIGHLIGHT") {
-			chrome.runtime.sendMessage({message: "addOptions"});
+			chrome.runtime.sendMessage("addOptions");
 		}
 		else {
-			chrome.runtime.sendMessage({message: "removeOptions"});
+			chrome.runtime.sendMessage("removeOptions");
 		}
 	}
 });
@@ -194,7 +194,7 @@ function isElementOnNextLine(elA, elB) {
 // removes the most recent selection when ctrl + z is pressed
 document.addEventListener('keydown', function(e) {
 	var highlights = highlighter.highlights;
-	if (highlights.length != 0 && ((!isMac && e.ctrlKey) 
+	if (highlights.length != 0 && ((!isMac && e.ctrlKey)
 		|| (isMac && e.metaKey)) && e.key == "z") {
 		var currSelection = window.getSelection();
 		if (currSelection) {
@@ -208,7 +208,7 @@ document.addEventListener('keydown', function(e) {
 // selections can only be removed by toggling again
 // 76 = L
 document.addEventListener('keydown', function(e) {
-	if (e.shiftKey && ((!isMac && e.ctrlKey) || (isMac && e.metaKey)) 
+	if (e.shiftKey && ((!isMac && e.ctrlKey) || (isMac && e.metaKey))
 		&& e.keyCode == 76) {
 		if (lockSelect) {
 			var currSelection = window.getSelection();

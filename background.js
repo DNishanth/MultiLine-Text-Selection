@@ -1,3 +1,5 @@
+contextMenuEnabled = true;
+
 // creates a new tab for each entry in the searches array
 function multiSearchHelper(searches, flag) {
     for (var x in searches) {
@@ -26,8 +28,8 @@ function multiSearchHelper(searches, flag) {
 
 // creates context menu options when any of the selections are right clicked
 chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        if (request.message == "addOptions") {
+    function(message, sender, sendResponse) {
+        if (message === "addOptions" && contextMenuEnabled) {
             chrome.contextMenus.removeAll(function() {
                 chrome.contextMenus.create({
                     id: "1",
@@ -61,7 +63,7 @@ chrome.runtime.onMessage.addListener(
                 });
             });
         }
-        else if (request.message == "removeOptions") {
+        else if (message === "removeOptions") {
             chrome.contextMenus.removeAll();
         }
     });
@@ -90,7 +92,7 @@ function onClickSearch(info, tab) {
     // multiSearchHelper(searches);
 }
 
-// creates a search tab for each line of default selected text 
+// creates a search tab for each line of default selected text
 function defaultSelectionSearch() {
     var searches;
     chrome.tabs.executeScript( {
@@ -108,7 +110,7 @@ function multipleSelectionSearch(selections, flag) {
     for (var x in selections) {
         // splits selected text by newlines
         searches = selections[x].split("\n");
-        multiSearchHelper(searches, flag);            
+        multiSearchHelper(searches, flag);
     }
 }
 
@@ -124,3 +126,9 @@ function combinedSearch(selections, flag) {
 }
 
 chrome.contextMenus.onClicked.addListener(onClickSearch);
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === 'sync' && changes.settings?.newValue) {
+        contextMenuEnabled = Boolean(changes.settings.newValue.contextMenuEnabled);
+    }
+});
