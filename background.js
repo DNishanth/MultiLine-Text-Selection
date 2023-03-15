@@ -29,7 +29,9 @@ function multiSearchHelper(searches, flag) {
 // creates context menu options when any of the selections are right clicked
 chrome.runtime.onMessage.addListener(
     function(message, sender, sendResponse) {
+        console.log(contextMenuEnabled);
         if (message === "addOptions" && contextMenuEnabled) {
+            console.log("adding options");
             chrome.contextMenus.removeAll(function() {
                 chrome.contextMenus.create({
                     id: "1",
@@ -46,24 +48,25 @@ chrome.runtime.onMessage.addListener(
                     title: "MultiYouTubeSearch",
                     contexts: ["page", "selection"]
                 });
-                chrome.contextMenus.create({
-                    id: "4",
-                    title: "CombinedYouTubeSearch",
-                    contexts: ["page", "selection"]
-                });
-                chrome.contextMenus.create({
-                    id: "5",
-                    title: "MultiWikiSearch",
-                    contexts: ["page", "selection"]
-                });
-                chrome.contextMenus.create({
-                    id: "6",
-                    title: "CombinedWikiSearch",
-                    contexts: ["page", "selection"]
-                });
+                // chrome.contextMenus.create({
+                //     id: "4",
+                //     title: "CombinedYouTubeSearch",
+                //     contexts: ["page", "selection"]
+                // });
+                // chrome.contextMenus.create({
+                //     id: "5",
+                //     title: "MultiWikiSearch",
+                //     contexts: ["page", "selection"]
+                // });
+                // chrome.contextMenus.create({
+                //     id: "6",
+                //     title: "CombinedWikiSearch",
+                //     contexts: ["page", "selection"]
+                // });
             });
         }
         else if (message === "removeOptions") {
+            console.log("removing options");
             chrome.contextMenus.removeAll();
         }
     });
@@ -128,7 +131,10 @@ function combinedSearch(selections, flag) {
 chrome.contextMenus.onClicked.addListener(onClickSearch);
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
+    console.log("change");
     if (areaName === 'sync' && changes.settings?.newValue) {
         contextMenuEnabled = Boolean(changes.settings.newValue.contextMenuEnabled);
+        console.log("content");
+        console.log(contextMenuEnabled);
     }
 });
