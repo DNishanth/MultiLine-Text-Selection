@@ -1,4 +1,26 @@
-contextMenuEnabled = true;
+const defaultSettings = {
+    settings: {
+        contextMenuChk: true,
+        multiSearchChk: false,
+        combinedSearchChk: false,
+        multiYTSearchChk: false,
+        combinedYTSearchChk: false,
+        multiWikiSearchChk: false,
+        combinedWikiSearchChk: false
+    }
+}
+
+const contextMenuOptions = {
+    multiSearchChk: "MultiSearch",
+    combinedSearchChk: "CombinedSearch",
+    multiYTSearchChk: "MultiYouTubeSearch",
+    combinedYTSearchChk: "CombinedYouTubeSearch",
+    multiWikiSearchChk: "MultiWikiSearch",
+    combinedWikiSearchChk: "CombinedWikiSearch",
+}
+
+// TODO: map ids to context menu titles
+//todo: google https?
 
 // creates a new tab for each entry in the searches array
 function multiSearchHelper(searches, flag) {
@@ -29,52 +51,36 @@ function multiSearchHelper(searches, flag) {
 // creates context menu options when any of the selections are right clicked
 chrome.runtime.onMessage.addListener(
     function(message, sender, sendResponse) {
-        console.log(contextMenuEnabled);
-        if (message === "addOptions" && contextMenuEnabled) {
-            console.log("adding options");
-            chrome.contextMenus.removeAll(function() {
-                chrome.contextMenus.create({
-                    id: "1",
-                    title: "MultiSearch",
-                    contexts: ["page", "selection"]
-                });
-                chrome.contextMenus.create({
-                    id: "2",
-                    title: "CombinedSearch",
-                    contexts: ["page", "selection"]
-                });
-                chrome.contextMenus.create({
-                    id: "3",
-                    title: "MultiYouTubeSearch",
-                    contexts: ["page", "selection"]
-                });
-                // chrome.contextMenus.create({
-                //     id: "4",
-                //     title: "CombinedYouTubeSearch",
-                //     contexts: ["page", "selection"]
-                // });
-                // chrome.contextMenus.create({
-                //     id: "5",
-                //     title: "MultiWikiSearch",
-                //     contexts: ["page", "selection"]
-                // });
-                // chrome.contextMenus.create({
-                //     id: "6",
-                //     title: "CombinedWikiSearch",
-                //     contexts: ["page", "selection"]
-                // });
-            });
+        if (message === "addOptions") {
+            addContextMenuOptions();
         }
         else if (message === "removeOptions") {
-            console.log("removing options");
             chrome.contextMenus.removeAll();
         }
     });
 
+function addContextMenuOptions() {
+    chrome.storage.sync.get(defaultSettings, ({settings}) => {
+        if (settings["contextMenuChk"]) {
+            chrome.contextMenus.removeAll(() => {
+                for (const [optionID, optionTitle] of Object.entries(contextMenuOptions)) {
+                    if (settings[optionID]) {
+                        chrome.contextMenus.create({
+                            id: optionID,
+                            title:  optionTitle,
+                            contexts: ["page", "selection"]
+                        });
+                    }
+                }
+            })
+        }
+    });
+}
+
 // creates a new google search tab for each line of text selected
 // called when the context menu item is clicked
-function onClickSearch(info, tab) {
-    var searches;
+function onClickSearch(info, tab) { // TODO: use tab
+    var searches; // TODO: remove?
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {message: "Request Selected Text"},
             function(response) {
@@ -130,11 +136,11 @@ function combinedSearch(selections, flag) {
 
 chrome.contextMenus.onClicked.addListener(onClickSearch);
 
-chrome.storage.onChanged.addListener((changes, areaName) => {
-    console.log("change");
-    if (areaName === 'sync' && changes.settings?.newValue) {
-        contextMenuEnabled = Boolean(changes.settings.newValue.contextMenuEnabled);
-        console.log("content");
-        console.log(contextMenuEnabled);
-    }
-});
+// chrome.storage.onChanged.addListener((changes, areaName) => {
+//     console.log("change");
+//     if (areaName === 'sync' && changes.settings?.newValue) {
+//         contextMenuEnabled = Boolean(changes.settings.newValue.contextMenuEnabled);
+//         console.log("content");
+//         console.log(contextMenuEnabled);
+//     }
+// });

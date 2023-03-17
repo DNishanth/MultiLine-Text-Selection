@@ -19,7 +19,7 @@ const searchOptions = document.getElementById("searchOptions");
 // Immediately persist options changes
 settingsForm.addEventListener("change", (event) => {
     settings[event.target.id] = event.target.checked;
-    chrome.storage.sync.set({ settings });
+    chrome.storage.sync.set({settings});
     if (event.target.id === "contextMenuChk") {
         searchOptions.toggleAttribute("disabled");
     }
@@ -43,7 +43,9 @@ for (const [checkboxID, checkboxState] of Object.entries(settings)) {
     console.log(settingsForm[checkboxID]);
     settingsForm[checkboxID].checked = checkboxState;
 }
-settingsForm.contextMenuChk.checked = Boolean(settings.contextMenuEnabled);
-if (!settings.contextMenuEnabled) {
+
+if (!settings.contextMenuChk) {
     searchOptions.setAttribute("disabled", "");
 }
+
+chrome.storage.sync.clear();
