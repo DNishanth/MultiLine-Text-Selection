@@ -53,30 +53,33 @@ chrome.storage.sync.get({copyByNewLine: true, copyBySpaces: false,
 var lockSelect = false;
 
 // sends array of selected text to the background page
-chrome.runtime.onMessage.addListener(
-	function(request, sender, sendResponse) {
-		var selectedText = new Array();
-		// checks if selections are made up of elements that should be separate search items
-		var elementA, elementB;
-		var text = "";
-		for (var i = 0; i < highlighter.highlights.length; i++) {
-			var highlightEls = highlighter.highlights[i].getHighlightElements();
-			text += highlightEls[0].innerText;
-			if (highlightEls.length > 1) {
-				for (var x = 0; x < highlightEls.length - 1; x++) {
-					elementA = highlightEls[x].getBoundingClientRect();
-					elementB = highlightEls[x + 1].getBoundingClientRect();
-					if (isElementOnNextLine(elementA, elementB)) {
-						selectedText.push(text);
-						text = "";
-					}
-				text += highlightEls[x + 1].innerText;
-			}
-		}
-		selectedText.push(text);
-		text = "";
-	}
-	sendResponse({array: selectedText});
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    var selectedText = [];
+    // checks if selections are made up of elements that should be separate search items
+    var elementA, elementB;
+    var text = ""; // TODO: cleanup/prevent whitespace or empty string here or in background.js
+    for (var i = 0; i < highlighter.highlights.length; i++) {
+        var highlightEls = highlighter.highlights[i].getHighlightElements();
+        console.log(i);
+        console.log("Highlight elements", highlightEls);
+        text += highlightEls[0].innerText;
+        if (highlightEls.length > 1) {
+            for (var x = 0; x < highlightEls.length - 1; x++) {
+                elementA = highlightEls[x].getBoundingClientRect();
+                elementB = highlightEls[x + 1].getBoundingClientRect();
+                if (isElementOnNextLine(elementA, elementB)) {
+                    selectedText.push(text);
+                    text = "";
+                }
+                text += highlightEls[x + 1].innerText;
+            }
+        }
+        console.log("pushing to arr");
+        console.log(text);
+        selectedText.push(text);
+        text = "";
+    }
+    sendResponse(selectedText);
 });
 
 // when a highlight element is dragged, set the drag text to the selection
