@@ -52,34 +52,11 @@ chrome.storage.sync.get({copyByNewLine: true, copyBySpaces: false,
 // allows selection without holding ctrl
 var lockSelect = false;
 
-// sends array of selected text to the background page
+// Sends array of selected text to the background page
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    var selectedText = [];
-    // checks if selections are made up of elements that should be separate search items
-    var elementA, elementB;
-    var text = ""; // TODO: cleanup/prevent whitespace or empty string here or in background.js
-    for (var i = 0; i < highlighter.highlights.length; i++) {
-        var highlightEls = highlighter.highlights[i].getHighlightElements();
-        console.log(i);
-        console.log("Highlight elements", highlightEls);
-        text += highlightEls[0].innerText;
-        if (highlightEls.length > 1) {
-            for (var x = 0; x < highlightEls.length - 1; x++) {
-                elementA = highlightEls[x].getBoundingClientRect();
-                elementB = highlightEls[x + 1].getBoundingClientRect();
-                if (isElementOnNextLine(elementA, elementB)) {
-                    selectedText.push(text);
-                    text = "";
-                }
-                text += highlightEls[x + 1].innerText;
-            }
-        }
-        console.log("pushing to arr");
-        console.log(text);
-        selectedText.push(text);
-        text = "";
-    }
-    sendResponse(selectedText);
+    sendResponse(extractSelectedText()
+        .map(e => e.trim())
+        .filter(Boolean)); // Remove all trailing whitespace
 });
 
 // when a highlight element is dragged, set the drag text to the selection
@@ -142,56 +119,53 @@ document.addEventListener("mousedown", function(e) {
 	}
 });
 
-// overrides copy event by sending selected text to
-// the clipboard
-document.addEventListener('copy', function(e) {
-	if (highlighter.highlights.length != 0) {
-		e.clipboardData.setData('text/plain', extractSelectionText());
-		e.preventDefault(); // prevents default copy event
+// Formats selection using copy settings and copies to clipboard
+document.addEventListener('copy', e => {
+	if (highlighter.highlights.length > 0) {
+        const selectionArray = extractSelectedText();
+        let clipboardText = "";
+        if (copyByBullet) {
+		    clipboardText = "• " + selectionArray.join("\n• ");
+        }
+        else if (copyByNewLine) {
+		    clipboardText = selectionArray.join("\n");
+        }
+        else {
+		    clipboardText = selectionArray.join(" ");
+        }
+		e.clipboardData.setData('text/plain', clipboardText);
+		e.preventDefault(); // prevent default copy event
 	}
 });
 
-// combines and formats the current selection based on clipboard copy settings
-function extractSelectionText() {
-	var elementA, elementB;
-	var text = "";
-	for (var i = 0; i < highlighter.highlights.length; i++) {
-		var highlightEls = highlighter.highlights[i].getHighlightElements();
-		if (copyByBullet) {
-			text += "• ";
-		}
-		text += highlightEls[0].innerText;
-		// checks if the next element should be placed below or beside
-		// the current element
-		if (highlightEls.length > 1) {
-			for (var x = 0; x < highlightEls.length - 1; x++) {
-				elementA = highlightEls[x].getBoundingClientRect();
-				elementB = highlightEls[x + 1].getBoundingClientRect();
-				if (isElementOnNextLine(elementA, elementB)) {
-					text += "\n";
-					if (copyByBullet) {
-						text += "• ";
-					}
-				}
-				text += highlightEls[x + 1].innerText;
-			}
-		}
-		// adds separator between each selection except the last
-		if (i != highlighter.highlights.length - 1) {
-			if (copyByNewLine || copyByBullet) {
-				text += "\n";
-			}
-			else {
-				text += " ";
-			}
-		}
-	}
-	return text;
+// Extracts array of selected text from highlights
+function extractSelectedText() {
+    const selectionArray = [];
+    for (const highlight of highlighter.highlights) {
+        const highlightElements = highlight.getHighlightElements();
+        let selection = highlightElements[0].innerText;
+        let elementA, elementB; // Separate highlights that span multiple elements e.g. bullets
+        for (let i = 0; i < highlightElements.length - 1; i++) {
+            elementA = highlightElements[i];
+            elementB = highlightElements[i + 1];
+            if (isElementOnNextLine(elementA, elementB)) {
+                selectionArray.push(selection);
+                selection = elementB.innerText;
+            }
+            else {
+                selection += elementB.innerText;
+            }
+        }
+        selectionArray.push(selection);
+    }
+    return selectionArray;
 }
 
 // returns true if element B is below element A and false if beside
 function isElementOnNextLine(elA, elB) {
-	return (elB.top > elA.bottom) || (elB.bottom < elA.top);
+    const rectA = elA.getBoundingClientRect();
+    const rectB = elB.getBoundingClientRect();
+	return (rectB.top > rectA.bottom) || (rectB.bottom < rectA.top);
 }
 
 // removes the most recent selection when ctrl + z is pressed
