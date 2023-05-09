@@ -9,14 +9,12 @@ const defaultSettings = {
     multiWikiSearchChk: false,
     combinedWikiSearchChk: false
 }
-console.log("cache:")
 const settingsForm = document.getElementById("settingsForm");
-console.log(settingsForm);
-console.log(settingsForm.contextMenuChk);
-console.log(settingsForm.multiYTSearchChk);
 const searchOptions = document.getElementById("searchOptions");
 
-// Immediately persist options changes
+// TODO: remove log
+
+// Update settings on form change
 settingsForm.addEventListener("change", (event) => {
     settings[event.target.id] = event.target.checked;
     chrome.storage.sync.set({settings});
@@ -26,26 +24,17 @@ settingsForm.addEventListener("change", (event) => {
     console.log(settings);
 });
 
-// TODO: cache needed? add more settings
 // TODO: test settings work from clean state, rename
 const data = await chrome.storage.sync.get({settings: defaultSettings});
-
-// chrome.storage.sync.get({settings: defaultSettings}, function(result) {
-//     copyByBullet = result.copyByBullet;
-// });
 
 console.log(data);
 Object.assign(settings, data.settings);
 console.log(settings);
 for (const [checkboxID, checkboxState] of Object.entries(settings)) {
-    console.log(checkboxID);
-    console.log(checkboxState);
-    console.log(settingsForm[checkboxID]);
     settingsForm[checkboxID].checked = checkboxState;
 }
 
+// Disable suboptions if show right click options is unchecked
 if (!settings.contextMenuChk) {
     searchOptions.setAttribute("disabled", "");
 }
-
-chrome.storage.sync.clear();

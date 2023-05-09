@@ -43,7 +43,7 @@ var copyBySpaces = false;
 var copyByBullet = false;
 
 chrome.storage.sync.get({copyByNewLine: true, copyBySpaces: false,
- copyByBullet: false}, function(result) {
+ copyByBullet: false}, result => {
  	copyByNewLine = result.copyByNewLine;
  	copyBySpaces = result.copyBySpaces;
  	copyByBullet = result.copyByBullet;
