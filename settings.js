@@ -2,12 +2,12 @@
 const settings = {};
 const defaultSettings = {
     contextMenuChk: true,
-    multiSearchChk: false,
-    combinedSearchChk: false,
-    multiYTSearchChk: false,
-    combinedYTSearchChk: false,
-    multiWikiSearchChk: false,
-    combinedWikiSearchChk: false
+    multiSearchChk: true,
+    combinedSearchChk: true,
+    multiYTSearchChk: true,
+    combinedYTSearchChk: true,
+    multiWikiSearchChk: true,
+    combinedWikiSearchChk: true
 }
 const settingsForm = document.getElementById("settingsForm");
 const searchOptions = document.getElementById("searchOptions");

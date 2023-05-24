@@ -1,6 +1,3 @@
-// add option when script is loaded so it will appear in context menu on first use
-chrome.runtime.sendMessage("addOptions"); // TODO: revisit this + message name
-
 // checks if browser is running on MacOS
 function isMacOS() {
 	return navigator.platform.indexOf('Mac') > -1;
@@ -16,7 +13,6 @@ if (isMac) {
 	textColor = "}"; // mac no text color
 }
 
-// var serializedSelections;
 
 // https://stackoverflow.com/questions/43676331/creating-a-css-class-with-a-javascript-object-or-var/43676931
 // creates css class that will be applied to each selection with rangy
@@ -43,10 +39,8 @@ var copyBySpaces = false;
 var copyByBullet = false;
 
 chrome.storage.sync.get({copyByNewLine: true, copyBySpaces: false,
- copyByBullet: false}, result => {
- 	copyByNewLine = result.copyByNewLine;
- 	copyBySpaces = result.copyBySpaces;
- 	copyByBullet = result.copyByBullet;
+    copyByBullet: false}, result => {
+    var {copyByNewLine, copyBySpaces, copyByBullet} = result;
 });
 
 // allows selection without holding ctrl
@@ -56,7 +50,7 @@ var lockSelect = false;
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse(extractSelectedText()
         .map(e => e.trim())
-        .filter(Boolean)); // Remove all trailing whitespace
+        .filter(Boolean)); // Remove all trailing whitespace and empty strings
 });
 
 // when a highlight element is dragged, set the drag text to the selection
