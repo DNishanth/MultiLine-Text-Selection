@@ -51,8 +51,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 function addContextMenuOptions() {
     chrome.storage.sync.get(defaultSettings, ({settings}) => {
-        if (settings["contextMenuChk"]) {
-            chrome.contextMenus.removeAll(() => {
+        chrome.contextMenus.removeAll(() => {
+            if (settings["contextMenuChk"]) {
                 for (const [optionID, optionTitle] of Object.entries(contextMenuOptions)) {
                     if (settings[optionID]) {
                         chrome.contextMenus.create({
@@ -62,8 +62,8 @@ function addContextMenuOptions() {
                         });
                     }
                 }
-            })
-        }
+            }
+        })
     });
 }
 
