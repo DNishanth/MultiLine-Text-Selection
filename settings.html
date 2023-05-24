@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="settings.css">
+    </head>
+    <body>
+        <h1>Settings</h1>
+        <form id="settingsForm">
+        <label>
+            <input type="checkbox" id="contextMenuChk">
+            Show right click search options
+        </label>
+            <fieldset id="searchOptions">
+                <label title="Open a search tab for each selection">
+                    <input type="checkbox" id="multiSearchChk">
+                    MultipleSearch
+                </label>
+
+                <label title="Combine selections and open a single search tab">
+                    <input type="checkbox" id="combinedSearchChk">
+                    CombinedSearch
+                </label>
+
+                <label title="Open a YouTube tab for each selection">
+                    <input type="checkbox" id="multiYTSearchChk">
+                    MultipleYouTubeSearch
+                </label>
+
+                <label title="Combine selections and open a single YouTube tab">
+                    <input type="checkbox" id="combinedYTSearchChk">
+                    CombinedYouTubeSearch
+                </label>
+
+                <label title="Open a Wikipedia tab for each selection">
+                    <input type="checkbox" id="multiWikiSearchChk">
+                    MultipleWikipediaSearch
+                </label>
+
+                <label title="Combine selections and open a single Wikipedia tab">
+                    <input type="checkbox" id="combinedWikiSearchChk">
+                    CombinedWikipediaSearch
+                </label>
+            </fieldset>
+        </form>
+        <script src="settings.js" type="module"></script>
+    </body>
+</html>

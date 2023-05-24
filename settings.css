@@ -1,0 +1,14 @@
+body {
+    /* background-color: rgb(240, 240, 240); */
+    font-size: medium;
+}
+
+fieldset {
+    display: flex;
+    flex-direction: column;
+    border: none;
+}
+
+label {
+    margin-bottom: 0.5em;
+}

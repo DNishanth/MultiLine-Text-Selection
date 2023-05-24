@@ -1,12 +1,9 @@
-// add option when script is loaded so it will appear in context menu on first use
-chrome.runtime.sendMessage({message: "addOptions"});
-
 // checks if browser is running on MacOS
 function isMacOS() {
 	return navigator.platform.indexOf('Mac') > -1;
 }
 
-// used to replace ctrl with cmd when using a mac 
+// used to replace ctrl with cmd when using a mac
 var isMac = isMacOS();
 var bgColor = "rgb(51, 144, 255)"; // windows blue
 var textColor = "; color: white}"; // windows white
@@ -16,7 +13,6 @@ if (isMac) {
 	textColor = "}"; // mac no text color
 }
 
-// var serializedSelections;
 
 // https://stackoverflow.com/questions/43676331/creating-a-css-class-with-a-javascript-object-or-var/43676931
 // creates css class that will be applied to each selection with rangy
@@ -43,40 +39,18 @@ var copyBySpaces = false;
 var copyByBullet = false;
 
 chrome.storage.sync.get({copyByNewLine: true, copyBySpaces: false,
- copyByBullet: false}, function(result) {
- 	copyByNewLine = result.copyByNewLine;
- 	copyBySpaces = result.copyBySpaces;
- 	copyByBullet = result.copyByBullet;
+    copyByBullet: false}, result => {
+    var {copyByNewLine, copyBySpaces, copyByBullet} = result;
 });
 
 // allows selection without holding ctrl
 var lockSelect = false;
 
-// sends array of selected text to the background page
-chrome.runtime.onMessage.addListener(
-	function(request, sender, sendResponse) {
-		var selectedText = new Array();
-		// checks if selections are made up of elements that should be separate search items
-		var elementA, elementB;
-		var text = "";
-		for (var i = 0; i < highlighter.highlights.length; i++) {
-			var highlightEls = highlighter.highlights[i].getHighlightElements();
-			text += highlightEls[0].innerText;
-			if (highlightEls.length > 1) {
-				for (var x = 0; x < highlightEls.length - 1; x++) {
-					elementA = highlightEls[x].getBoundingClientRect();
-					elementB = highlightEls[x + 1].getBoundingClientRect();
-					if (isElementOnNextLine(elementA, elementB)) {
-						selectedText.push(text);
-						text = "";
-					}
-				text += highlightEls[x + 1].innerText;
-			}
-		}
-		selectedText.push(text);
-		text = "";
-	}
-	sendResponse({array: selectedText});
+// Sends array of selected text to the background page
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    sendResponse(extractSelectedText()
+        .map(e => e.trim())
+        .filter(Boolean)); // Remove all trailing whitespace and empty strings
 });
 
 // when a highlight element is dragged, set the drag text to the selection
@@ -131,70 +105,67 @@ document.addEventListener("mousedown", function(e) {
 
 	if (e.button == 2) {
 		if (e.target.id == "HIGHLIGHT") {
-			chrome.runtime.sendMessage({message: "addOptions"});
+			chrome.runtime.sendMessage("addOptions");
 		}
 		else {
-			chrome.runtime.sendMessage({message: "removeOptions"});
+			chrome.runtime.sendMessage("removeOptions");
 		}
 	}
 });
 
-// overrides copy event by sending selected text to
-// the clipboard
-document.addEventListener('copy', function(e) {
-	if (highlighter.highlights.length != 0) {
-		e.clipboardData.setData('text/plain', extractSelectionText());
-		e.preventDefault(); // prevents default copy event
+// Formats selection using copy settings and copies to clipboard
+document.addEventListener('copy', e => {
+	if (highlighter.highlights.length > 0) {
+        const selectionArray = extractSelectedText();
+        let clipboardText = "";
+        if (copyByBullet) {
+		    clipboardText = "• " + selectionArray.join("\n• ");
+        }
+        else if (copyByNewLine) {
+		    clipboardText = selectionArray.join("\n");
+        }
+        else {
+		    clipboardText = selectionArray.join(" ");
+        }
+		e.clipboardData.setData('text/plain', clipboardText);
+		e.preventDefault(); // prevent default copy event
 	}
 });
 
-// combines and formats the current selection based on clipboard copy settings
-function extractSelectionText() {
-	var elementA, elementB;
-	var text = "";
-	for (var i = 0; i < highlighter.highlights.length; i++) {
-		var highlightEls = highlighter.highlights[i].getHighlightElements();
-		if (copyByBullet) {
-			text += "• ";
-		}
-		text += highlightEls[0].innerText;
-		// checks if the next element should be placed below or beside
-		// the current element
-		if (highlightEls.length > 1) {
-			for (var x = 0; x < highlightEls.length - 1; x++) {
-				elementA = highlightEls[x].getBoundingClientRect();
-				elementB = highlightEls[x + 1].getBoundingClientRect();
-				if (isElementOnNextLine(elementA, elementB)) {
-					text += "\n";
-					if (copyByBullet) {
-						text += "• ";
-					}
-				}
-				text += highlightEls[x + 1].innerText;
-			}
-		}
-		// adds separator between each selection except the last
-		if (i != highlighter.highlights.length - 1) {
-			if (copyByNewLine || copyByBullet) {
-				text += "\n";
-			}
-			else {
-				text += " ";
-			}
-		}
-	}
-	return text;
+// Extracts array of selected text from highlights
+function extractSelectedText() {
+    const selectionArray = [];
+    for (const highlight of highlighter.highlights) {
+        const highlightElements = highlight.getHighlightElements();
+        let selection = highlightElements[0].innerText;
+        let elementA, elementB; // Separate highlights that span multiple elements e.g. bullets
+        for (let i = 0; i < highlightElements.length - 1; i++) {
+            elementA = highlightElements[i];
+            elementB = highlightElements[i + 1];
+            if (isElementOnNextLine(elementA, elementB)) {
+                selectionArray.push(selection);
+                selection = elementB.innerText;
+            }
+            else {
+                selection += elementB.innerText;
+            }
+        }
+        selectionArray.push(selection);
+    }
+    return selectionArray;
 }
 
 // returns true if element B is below element A and false if beside
 function isElementOnNextLine(elA, elB) {
-	return (elB.top > elA.bottom) || (elB.bottom < elA.top);
+    const rectA = elA.getBoundingClientRect();
+    const rectB = elB.getBoundingClientRect();
+	return (rectB.top > rectA.bottom) || (rectB.bottom < rectA.top);
 }
 
 // removes the most recent selection when ctrl + z is pressed
 document.addEventListener('keydown', function(e) {
 	var highlights = highlighter.highlights;
-	if (highlights.length != 0 && ((!isMac && e.ctrlKey) 
+	if (highlights.length != 0 && ((!isMac && e.ctrlKey)
 		|| (isMac && e.metaKey)) && e.key == "z") {
 		var currSelection = window.getSelection();
 		if (currSelection) {
@@ -208,7 +179,7 @@ document.addEventListener('keydown', function(e) {
 // selections can only be removed by toggling again
 // 76 = L
 document.addEventListener('keydown', function(e) {
-	if (e.shiftKey && ((!isMac && e.ctrlKey) || (isMac && e.metaKey)) 
+	if (e.shiftKey && ((!isMac && e.ctrlKey) || (isMac && e.metaKey))
 		&& e.keyCode == 76) {
 		if (lockSelect) {
 			var currSelection = window.getSelection();
