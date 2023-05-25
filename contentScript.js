@@ -95,17 +95,16 @@ document.addEventListener("mousedown", e => {
             chrome.runtime.sendMessage("removeOptions");
         }
     }
-    if (lockSelect) {
-        return;
-    }
-    if (selectKey && e.button == LEFT_CLICK && highlighter.highlights.length == 0
-        && window.getSelection() != "") {
-        highlighter.highlightSelection(HIGHLIGHT_CLASS);
-    }
-    else if (!selectKey && e.button == LEFT_CLICK && highlighter.highlights.length > 0
-        && e.target.id != HIGHLIGHT_ID) {
-        clearSelection();
-        highlighter.removeAllHighlights();
+    if (!lockSelect && e.button == LEFT_CLICK) {
+        if (selectKey && highlighter.highlights.length == 0
+            && window.getSelection() != "") {
+            highlighter.highlightSelection(HIGHLIGHT_CLASS); // Make first selection
+        }
+        else if (!selectKey && highlighter.highlights.length > 0
+            && e.target.id != HIGHLIGHT_ID) {
+            clearSelection();
+            highlighter.removeAllHighlights(); // Clear if clicking outside selection
+        }
     }
 });
 
