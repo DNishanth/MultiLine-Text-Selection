@@ -1,3 +1,4 @@
+// Default state of context menu settings
 const defaultSettings = {
     settings: {
         contextMenuChk: true,
@@ -10,6 +11,7 @@ const defaultSettings = {
     }
 }
 
+// Context menu titles
 const contextMenuOptions = {
     multiSearchChk: "MultiSearch",
     combinedSearchChk: "CombinedSearch",
@@ -49,22 +51,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
+// Clear context menu and new items if enabled in settings
 function addContextMenuOptions() {
-    chrome.storage.sync.get(defaultSettings, ({settings}) => {
-        chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.removeAll(() => {
+        chrome.storage.sync.get(defaultSettings, ({settings}) => {
             if (settings["contextMenuChk"]) {
-                for (const [optionID, optionTitle] of Object.entries(contextMenuOptions)) {
-                    if (settings[optionID]) {
-                        chrome.contextMenus.create({
-                            id: optionID,
-                            title:  optionTitle,
-                            contexts: ["page", "selection"]
-                        });
-                    }
-                }
+                createMenuItems(settings);
             }
         })
     });
+}
+
+// Create a context menu item for each active search setting
+function createMenuItems(settings) {
+    for (const [optionID, optionTitle] of Object.entries(contextMenuOptions)) {
+        if (settings[optionID]) {
+            chrome.contextMenus.create({
+                id: optionID,
+                title:  optionTitle,
+                contexts: ["page", "selection"]
+            });
+        }
+    }
 }
 
 // creates a new google search tab for each line of text selected
