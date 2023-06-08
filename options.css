@@ -1,0 +1,26 @@
+body {
+    background-color: lightgrey;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.button {
+    border: none;
+    color: white;
+    background-color: darkgray;
+    text-align: center;
+    font-size: 16px;
+    white-space: nowrap;
+    height: 40px;
+    width: 170px;
+    margin-bottom: 5px;
+}
+
+.button:hover {
+    opacity: .8;
+}
+
+.active {
+    background-color: rgb(0, 162, 232);
+}

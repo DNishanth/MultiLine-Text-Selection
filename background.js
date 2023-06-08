@@ -2,12 +2,12 @@
 const defaultSettings = {
     settings: {
         contextMenuChk: true,
-        multiSearchChk: false,
-        combinedSearchChk: false,
-        multiYTSearchChk: false,
-        combinedYTSearchChk: false,
-        multiWikiSearchChk: false,
-        combinedWikiSearchChk: false
+        multiSearchChk: true,
+        combinedSearchChk: true,
+        multiYTSearchChk: true,
+        combinedYTSearchChk: true,
+        multiWikiSearchChk: true,
+        combinedWikiSearchChk: true
     }
 }
 

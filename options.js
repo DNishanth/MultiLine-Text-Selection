@@ -1,80 +1,39 @@
-var newlineButton = document.getElementById("newlineButton");
-var spaceButton = document.getElementById("spaceButton");
-var bulletButton = document.getElementById("bulletButton");
-var selectedColor = 'rgb(' + 0 + ',' + 162 + ',' + 232 + ')';
-var unSelectedColor = "darkgrey";
-var copyByNewLine = true; // default copy separates by newlines
-var copyBySpaces = false;
-var copyByBullet = false;
+// Local state of copy options
+const options = {
+    copyByNewLine: true,
+    copyBySpaces: false,
+    copyByBullet: false
+}
 
-// initializes options menu and restores saved choices
-// defaults to Copy With Newlines
-chrome.storage.sync.get({copyByNewLine: true, copyBySpaces: false,
- copyByBullet: false}, function(result) {
-	if (result.copyByNewLine == true) {
-		newlineButton.style.background = selectedColor;
-		copyByNewLine = true;
-	}
-	else if (result.copyByNewLine == false) {
-		newlineButton.style.background = unSelectedColor;
-		copyByNewLine = false;
-	}	
-
-	if (result.copyBySpaces == true) {
-		spaceButton.style.background = selectedColor;
-		copyBySpaces = true;
-	}
-	else if (result.copyBySpaces == false) {
-		spaceButton.style.background = unSelectedColor;
-		copyBySpaces = false;
-	}
-
-	if (result.copyByBullet == true) {
-		bulletButton.style.background = selectedColor;
-		copyByBullet = true;
-	}
-	else if (result.copyByBullet == false) {
-		bulletButton.style.background = unSelectedColor;
-		copyByBullet = false;
-	}
+// Initialize options menu with saved settings
+chrome.storage.sync.get(options, settings => {
+    for (const option in settings) {
+        if (settings[option]) {
+            document.getElementById(option).classList.add("active");
+        }
+    }
 });
 
+// Update options object with new active setting
+function toggleSettings(activeSetting) {
+    for (const option in options) {
+        options[option] = false;
+    }
+    options[activeSetting] = true;
+}
 
-newlineButton.onclick = function() {
-	if (!copyByNewLine) {
-		copyByNewLine = true;
-		copyBySpaces = false;
-		copyByBullet = false;
-		newlineButton.style.background = selectedColor;
-		spaceButton.style.background = unSelectedColor;
-		bulletButton.style.background = unSelectedColor;
-		chrome.storage.sync.set({copyByNewLine: true,
-			copyBySpaces: false, copyByBullet: false});
-	}
-};
+// Update active css and save settings on button click
+function changeSetting(e) {
+    const prevActiveBtn = document.getElementsByClassName("active")[0];
+    prevActiveBtn.classList.remove("active");
+    const newActiveBtn = document.getElementById(e.target.id);
+    newActiveBtn.classList.add("active");
+    options[e.target.id] = true;
+    toggleSettings(e.target.id);
+    chrome.storage.sync.set(options);
+}
 
-spaceButton.onclick = function() {
-	if (!copyBySpaces) {
-		copyByNewLine = false;
-		copyBySpaces = true;
-		copyByBullet = false;
-		newlineButton.style.background = unSelectedColor;
-		spaceButton.style.background = selectedColor;
-		bulletButton.style.background = unSelectedColor;
-		chrome.storage.sync.set({copyByNewLine: false,
-			copyBySpaces: true, copyByBullet: false});
-	}
-};
-
-bulletButton.onclick = function() {
-	if (!copyByBullet) {
-		copyByNewLine = false;
-		copyBySpaces = false;
-		copyByBullet = true;
-		newlineButton.style.background = unSelectedColor;
-		spaceButton.style.background = unSelectedColor;
-		bulletButton.style.background = selectedColor;
-		chrome.storage.sync.set({copyByNewLine: false,
-			copyBySpaces: false, copyByBullet: true});
-	}
-};
+const buttons = document.getElementsByClassName("button");
+for (btn of buttons) {
+    btn.addEventListener('click', changeSetting);
+}
