@@ -3,14 +3,13 @@ function isMacOS() {
     return navigator.platform.indexOf('Mac') > -1;
 }
 
-// Initialize
-var copyByNewLine = true; // add newlines after selections if true
-var copyBySpaces = false; // add spaces after selections if true
-var copyByBullet = false; // add a bullet before selections if true
-chrome.storage.sync.get({copyByNewLine: true, copyBySpaces: false,
-    copyByBullet: false}, result => {
-    var {copyByNewLine, copyBySpaces, copyByBullet} = result;
-});
+// Initialize local state of copy settings
+var settings = {
+    copyByNewLine: true, // add newlines after selections if true
+    copyBySpaces: false, // add spaces after selections if true
+    copyByBullet: false, // add a bullet before selections if true
+}
+chrome.storage.sync.get(settings, res => settings = res);
 
 var lockSelect = false; // allow selection without holding ctrl if true
 const isMac = isMacOS(); // used to replace ctrl with cmd when using a mac
@@ -113,10 +112,10 @@ document.addEventListener('copy', e => {
     if (highlighter.highlights.length > 0) {
         const selectionArray = extractSelectedText();
         let clipboardText = "";
-        if (copyByBullet) {
+        if (settings.copyByBullet) {
             clipboardText = "• " + selectionArray.join("\n• ");
         }
-        else if (copyByNewLine) {
+        else if (settings.copyByNewLine) {
             clipboardText = selectionArray.join("\n");
         }
         else {
@@ -179,9 +178,11 @@ document.addEventListener('keydown', e => {
     }
 });
 
-// updates copy option
+// Update local state of copy settings on change
 chrome.storage.onChanged.addListener((changes, areaName) => {
-    for (var key in changes) {
-        window[key] = changes[key].newValue;
+    for (const key in changes) {
+        if (key in settings) {
+            settings[key] = changes[key].newValue;
+        }
     }
 });
